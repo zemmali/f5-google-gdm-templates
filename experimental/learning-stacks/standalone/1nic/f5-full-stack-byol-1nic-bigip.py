@@ -7,6 +7,67 @@
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 def GenerateConfig(context):
   resources = [{
+      'name': 'net-' + context.env['deployment'],
+      'type': 'compute.v1.network',
+      'properties': {
+          'IPv4Range': '10.0.0.1/24'
+      }
+  }, {
+      'name': 'firewall-' + context.env['deployment'],
+      'type': 'compute.v1.firewall',
+      'properties': {
+          'network': '$(ref.net-' + context.env['deployment'] + '.selfLink)',
+          'sourceRanges': ['0.0.0.0/0'],
+          'allowed': [{
+              'IPProtocol': 'TCP',
+              'ports': [80,22,443,8443]
+          }]
+      }
+  }, {
+      'name': 'webserver-' + context.env['deployment'],
+      'type': 'compute.v1.instance',
+      'properties': {
+          'zone': context.properties['availabilityZone1'],
+          'machineType': ''.join([COMPUTE_URL_BASE, 'projects/',
+                                  context.env['project'], '/zones/',
+                                  context.properties['availabilityZone1'], '/machineTypes/',
+                                  context.properties['instanceType']]),
+          'disks': [{
+              'deviceName': 'boot',
+              'type': 'PERSISTENT',
+              'boot': True,
+              'autoDelete': True,
+              'initializeParams': {
+                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',
+                                          'debian-cloud/global/',
+                                          'images/family/debian-8'])
+              }
+          }],
+          'networkInterfaces': [{
+              'network': '$(ref.net-' + context.env['deployment']
+                         + '.selfLink)',
+              'accessConfigs': [{
+                  'name': 'External NAT',
+                  'type': 'ONE_TO_ONE_NAT'
+              }]
+          }],
+          'metadata': {
+              'items': [{
+                  'key': 'startup-script',
+                  'value': ''.join(['#!/bin/bash\n',
+                                    'INSTANCE=$(curl http://metadata.google.',
+                                    'internal/computeMetadata/v1/instance/',
+                                    'hostname -H "Metadata-Flavor: Google")\n',
+                                    'echo "<html><header><title>Hello from ',
+                                    'Deployment Manager!</title></header>',
+                                    '<body><h2>Hello from $INSTANCE</h2><p>',
+                                    'Google Deployment Manager and F5 bids you good day!</p>',
+                                    '</body></html>" > index.html\n',
+                                    'sudo python -m SimpleHTTPServer 80\n'])
+              }]
+          }
+      }
+  }, {
       'name': 'bigip1-' + context.env['deployment'],
       'type': 'compute.v1.instance',
       'properties': {
@@ -28,9 +89,7 @@ def GenerateConfig(context):
               }
           }],
           'networkInterfaces': [{
-              'network': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                  context.env['project'], '/global/networks/',
-                                  context.properties['subnet1']]),
+              'network': '$(ref.net-' + context.env['deployment'] + '.selfLink)',
               'accessConfigs': [{
                   'name': 'External NAT',
                   'type': 'ONE_TO_ONE_NAT'
@@ -146,6 +205,8 @@ def GenerateConfig(context):
                                     'tmsh save /sys config\n',
                                     'date\n',
                                     '### START CUSTOM TMSH CONFIGURTION\n',
+                                    'tmsh create ltm pool demo-pool members add { 10.0.0.3:80 } monitor http\n',
+                                    'tmsh create ltm virtual /Common/demp-80 { destination 10.0.0.2:80 ip-protocol tcp pool /Common/demo-pool profiles replace-all-with { tcp { } http { } }  source 0.0.0.0/0 source-address-translation { type automap } translate-address enabled translate-port enabled }\n',
                                     '### END CUSTOM TMSH CONFIGURATION\n',
                                     'EOF\n',
                                     'cat <<\'EOF\' > /config/cloud/gce/rm-password.sh\n',
