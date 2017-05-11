@@ -65,7 +65,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 | Parameter | Description |
 | --- | --- |
-| region | oogle Region to deploy BIG-IP, such as **us-west1** |
+| region | Google Region to deploy BIG-IP, such as **us-west1** |
 | availabilityZone1 | The availability zone where you want to deploy the BIG-IP VE instance, such as **us-west1-a** |
 | network | Network name to deploy BIG-IP |
 | subnet1 | The name of your subnet |
