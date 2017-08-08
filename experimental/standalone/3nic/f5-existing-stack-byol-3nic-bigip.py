@@ -52,8 +52,9 @@ def GenerateConfig(context):
               'accessConfigs': [{
                   'name': 'External NAT',
                   'type': 'ONE_TO_ONE_NAT'
-              },
-                          {
+              }],
+            },
+            {
               'network': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/global/networks/',
                                   context.properties['network2']]),
@@ -65,7 +66,8 @@ def GenerateConfig(context):
                   'name': 'External NAT',
                   'type': 'ONE_TO_ONE_NAT'
               }],
-          }],
+            },
+          ],
           'metadata': {
               'items': [{
                   'key': 'output',
@@ -188,8 +190,8 @@ def GenerateConfig(context):
                                     '\"tmsh create net vlan external interfaces add { 1.1 }\"\n',
                                     '\"tmsh create net self ${INT1ADDRESS}/24 vlan external allow-service add { tcp:4353 }\"\n',
                                     '\"tmsh create net route default gw ${GATEWAY}.1\"\n',
-                                    '\"tmsh create net vlan external interfaces add { 1.2 }\"\n',
-                                    '\"tmsh create net self ${INT2ADDRESS}/24 vlan external allow-service add { tcp:4353 }\"\n',
+                                    '\"tmsh create net vlan internal interfaces add { 1.2 }\"\n',
+                                    '\"tmsh create net self ${INT2ADDRESS}/24 vlan internal allow-service add { tcp:4353 }\"\n',
                                     '\"tmsh save /sys config\")\n',
                                     'for CMD in \"${tmsh[@]}\"\n',
                                     'do\n',
