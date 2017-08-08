@@ -31,17 +31,29 @@ def GenerateConfig(context):
             {
               'network': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/global/networks/',
-                                  context.properties['mgmtNetwork1']]),
+                                  context.properties['mgmtNetwork']]),
               'subnetwork': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/regions/',
                                   context.properties['region'], '/subnetworks/',
-                                  context.properties['mgmtSubnet1']]),
+                                  context.properties['mgmtSubnet']]),
               'accessConfigs': [{
                   'name': 'External NAT',
                   'type': 'ONE_TO_ONE_NAT'
               }],
             },
             {
+              'network': ''.join([COMPUTE_URL_BASE, 'projects/',
+                                  context.env['project'], '/global/networks/',
+                                  context.properties['network1']]),
+              'subnetwork': ''.join([COMPUTE_URL_BASE, 'projects/',
+                                  context.env['project'], '/regions/',
+                                  context.properties['region'], '/subnetworks/',
+                                  context.properties['subnet1']]),
+              'accessConfigs': [{
+                  'name': 'External NAT',
+                  'type': 'ONE_TO_ONE_NAT'
+              },
+                          {
               'network': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/global/networks/',
                                   context.properties['network2']]),
