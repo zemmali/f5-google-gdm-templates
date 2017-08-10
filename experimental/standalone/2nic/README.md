@@ -1,4 +1,4 @@
-# Deploying the BIG-IP in Google Cloud - Single NIC
+# Deploying the BIG-IP in Google Cloud - 2 NIC
 
 [![Slack Status](https://f5cloudsolutions.herokuapp.com/badge.svg)](https://f5cloudsolutions.herokuapp.com)
 
@@ -8,26 +8,24 @@
  - [Prerequisites](#prerequisites-and-notes)
  - [Security](#security)
  - [Deploying the Template](#deploying-the-template)
- - [Configuration Example](#config)
  
  
 ## Introduction
-This solution uses a Google Deployment Manager Template to launch a single NIC deployment a BIG-IP VE in an Google Virtual Private Cloud. Traffic flows from the BIG-IP VE to the application servers.  This is the standard Cloud design where the compute instance of
-F5 is running with a single interface, which processes both management and data plane traffic.  This is a traditional model in the cloud where the deployment is considered one-armed.
+This solution uses a Google Deployment Manager Template to launch a 2 NIC deployment a BIG-IP VE in an Google Virtual Private Cloud. In a 2-NIC implementation, one interface is data-plane traffic from the Internet, and the second interface is connected into the Google networks where traffic is processed by the pool members. Traffic flows from the BIG-IP VE to the application servers.
  
-The **existing stack** Google Deployment Manager template incorporates existing networks. If you would like to run a *full stack* which creates and configures the BIG-IP, the Google Cloud infrastructure, as well as a backend webserver, see the templates located in the *learning-stacks* folder in the **experimental** directory.
+The **existing stack** Google Deployment Manager template incorporates existing networks.
 
 
 ## Prerequisites and notes
-The following are prerequisites and configuration notes for the F5 single NIC GDM template:
+The following are prerequisites and configuration notes for the F5 2 NIC GDM template:
   - You must have installed the Google Cloud SDK (https://cloud.google.com/sdk/downloads)
-  - An F5 Networks BYOL license (Bring Your Own License) available
-  - A Google Cloud Platform (GCP) network with one subnet.  The subnet requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
-  - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud)
+  - An F5 Networks BYOL license (Bring Your Own License) available.
+  - Two Google Cloud Platform (GCP) networks with at least one subnet in each. The subnet for the management network requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
+  - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud).
   - An Google Firewall rule with the following inbound rules:
-    - Port 22 for SSH access to the BIG-IP VE
-    - Port 8443 (or other port) for accessing the BIG-IP web-based Configuration utility
-    - A port for accessing your applications via the BIG-IP virtual server
+    - Port 22 for SSH access to the BIG-IP VE.
+    - Port 443 (or other port) for accessing the BIG-IP web-based Configuration utility.
+    - A port for accessing your applications via the BIG-IP virtual server.
   - This solution uses the SSH key to enable access to the BIG-IP system. If you want access to the BIG-IP web-based Configuration utility, you must first SSH into the BIG-IP VE using the SSH key you provided in the template.  You can then create a user account with admin-level permissions on the BIG-IP VE to allow access if necessary.
   - You must use a BIG-IP instance that has at least 2 vCPU and 4 GB memory. For each additional vCPU, add at least 2 GB of memory. Note: Because of this requirement, the *n1-highcpu* instance types are not supported.  The following are the minimum and default Google Cloud Instance sizes:
     - Good: minimum – **n1-standard-1**; default – **n1-standard-2**
@@ -46,14 +44,14 @@ This GDM template downloads helper code to configure the BIG-IP system. If you w
 
 
 ### Help 
-Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from F5 Technical Support.
+While this template has been created by F5 Networks, it is in the experimental directory and therefore has not completed full testing and is subject to change. F5 Networks does not offer technical support for templates in the experimental directory. For supported templates, see the templates in the supported directory.
 
 We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 cloud templates.  This channel is typically monitored Monday-Friday 9-5 PST by F5 employees who will offer best-effort support. 
 
 
 
 ## Deploying the template
-This solution uses a YAML file for containing the parameters necessary to deploy the BIG-IP instance in Google Cloud.  The YAML file (**f5-existing-stack-byol-1nic-bigip.yaml**) resides in this repository.  You ***must edit the YAML file*** to include information for your deployment before using the file to launch the BIG-IP VE instance.
+This solution uses a YAML file for containing the parameters necessary to deploy the BIG-IP instance in Google Cloud.  The YAML file (**f5-existing-stack-byol-2nic-bigip.yaml**) resides in this repository.  You ***must edit the YAML file*** to include information for your deployment before using the file to launch the BIG-IP VE instance.
 1. Make sure you have completed all of the [prerequisites](#prerequisites). 
 2. [Edit the parameters](#edit-the-yaml-file) in the **f5-existing-stack-byol-1nic-bigip.yaml** YAML file in this repository as described in this section.
 3. [Save the YAML file](#save-the-yaml-file).
@@ -65,11 +63,16 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 | Parameter | Description |
 | --- | --- |
+| region | The Google region where you want to deploy the BIG-IP VE, for example, **us-west1** |
 | availabilityZone1 | The availability zone where you want to deploy the BIG-IP VE instance, such as **us-west1-a** |
+| mgmtNetwork | The network you want to use for management traffic |
+| network1 | The network name you want to use for BIG-IP external application traffic. |
+| mgmtSubnet | The name of your subnet for management. |
 | licenseKey1 | Your F5 BIG-IP BYOL license key |
+| imageName | The F5 image name (such as f5-byol-bigip-13-0-0-2-3-1671-best) that is accessible by the Project launching the deployment template. | 
 | instanceType | The BIG-IP instance type you want to use, such as **n1-standard-2** |
-| subnet1 | The name of your subnet |
-| bigipDns | The IP address of the DNS Server, example 4.4.4.4, currently required; subnet DHCP assigned DNS also added. |
+| subnet1 | The name of your subnet for network1. |
+| manGuiPort | The BIG-IP VE management port.  The default is 443. |
 
 Example of the YAML file:
 
@@ -77,32 +80,37 @@ Example of the YAML file:
 ```yaml 
 # Copyright 2017 F5 Networks All rights reserved.
 #
-# Version v1.0.0
+# Version v1.0.0rc1
 
 imports:
-- path: f5-existing-stack-byol-1nic-bigip.py
+- path: f5-existing-stack-byol-2nic-bigip.py
 resources:
-- name: bigip-1nic-setup
-  type: f5-existing-stack-byol-1nic-bigip.py
+- name: bigip-2nic-setup
+  type: f5-existing-stack-byol-2nic-bigip.py
   properties:
-   region: <region>
-   ### Google Region to deploy BIG-IP VE, for example us-west1
-   availabilityZone1: <availability zone>
+   region: us-east1
+   ### Google Region to deploy BIG-IP, for example us-west1
+   availabilityZone1: us-east1-b
    ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
-   network: <network>
-   ### Network name to deploy BIG-IP
-   subnet1: <subnet>
-   ### Subnet of Network BIG-IP should use
-   licenseKey1: <lic key>
+   mgmtNetwork: dewpt
+   ### Specify network to use for managment traffic
+   network1: dewpt2
+   ### Specify Network name to for BIG-IP external application traffic
+   mgmtSubnet: subnet1
+   subnet1: subnet2
+   ### Subnet of network1
+   licenseKey1: MGQJZ-RRDHF-IMKTA-DJVKX-DTXYWXA
    ### BIG-IP license key
-   imageName: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
-   ### BIG-IP image to use
+   imageName: jpruitt-multinic
+   ### Image needs to be accessable by project launching deployment template
+   ### BIG-IP image, valid (supported) choices include:
+   ### f5-byol-bigip-13-0-0-2-3-1671-good
+   ### f5-byol-bigip-13-0-0-2-3-1671-better
+   ### f5-byol-bigip-13-0-0-2-3-1671-best
    instanceType: n1-standard-4
    ### Instance type assigned to BIG-IP
-   manGuiPort: '8443'
-   ### BIG-IP Management Port, the default is 8443
-   bigipDns: '<dns server>'
-   ### DNS Server, example 8.8.8.8, required; subnet DHCP assigned DNS also added.
+   manGuiPort: '443'
+   ### BIG-IP Management Port, the default is 443
 ```
 
 ### Save the YAML file
@@ -120,15 +128,6 @@ Keep in mind the following:
 
 <br>
 
-
-
-## Configuration Example <a name="config"></a>
-
-The following is a simple configuration diagram for this single NIC deployment. In this scenario, all access to the BIG-IP VE appliance is through the same IP address and virtual network interface (vNIC).  This interface processes both management and data plane traffic.
-
-![Single NIC configuration example](images/google_setup.png)
-### Documentation
-The ***BIG-IP Virtual Edition and Google Cloud Platform: Setup*** guide (https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-google-cloud-platform-13-0-0.html) details how to create the configuration manually without using the template.  This document also describes the configuration in more detail.
 
 
 ## Security Details <a name="securitydetail"></a>
@@ -255,4 +254,4 @@ under the License.
 Contributor License Agreement
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Individuals or business entities who contribute to this project must have
-completed and submitted the `F5 Contributor License Agreement`
+completed and submitted the [F5 Contributor License Agreement](http://f5-openstack-docs.readthedocs.io/en/latest/cla_landing.html).
