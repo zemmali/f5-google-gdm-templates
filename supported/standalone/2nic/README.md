@@ -15,14 +15,14 @@
 This solution uses a Google Deployment Manager Template to launch a single NIC deployment a BIG-IP VE in an Google Virtual Private Cloud. Traffic flows from the BIG-IP VE to the application servers.  This is the standard Cloud design where the compute instance of
 F5 is running with a single interface, which processes both management and data plane traffic.  This is a traditional model in the cloud where the deployment is considered one-armed.
  
-The **existing stack** Google Deployment Manager template incorporates existing networks. If you would like to run a *full stack* which creates and configures the BIG-IP, the Google Cloud infrastructure, as well as a backend webserver, see the templates located in the *learning-stacks* folder in the **experimental** directory.
+The **existing stack** Google Deployment Manager template incorporates an existing Networking. If you would like to run a *full stack* which creates and configures the BIG-IP, the Google Cloud infrastructure, as well as a backend webserver, see the templates located in the *learning-stacks* folder in the **experimental** directory.
 
 
 ## Prerequisites and notes
 The following are prerequisites and configuration notes for the F5 single NIC GDM template:
   - You must have installed the Google Cloud SDK (https://cloud.google.com/sdk/downloads)
   - An F5 Networks BYOL license (Bring Your Own License) available
-  - A Google Cloud Platform (GCP) network with one subnet.  The subnet requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
+  - A Google Cloud Platform (GCP) network with one subnet
   - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud)
   - An Google Firewall rule with the following inbound rules:
     - Port 22 for SSH access to the BIG-IP VE
@@ -48,7 +48,7 @@ This GDM template downloads helper code to configure the BIG-IP system. If you w
 ### Help 
 Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from F5 Technical Support.
 
-We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 cloud templates.  This channel is typically monitored Monday-Friday 9-5 PST by F5 employees who will offer best-effort support. 
+We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 CloudFormation templates.  This channel is typically monitored Monday-Friday 9-5 PST by F5 employees who will offer best-effort support. 
 
 
 
