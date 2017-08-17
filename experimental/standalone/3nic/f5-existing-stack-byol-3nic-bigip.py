@@ -20,8 +20,7 @@ def GenerateConfig(context):
               'boot': True,
               'autoDelete': True,
               'initializeParams': {
-                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                          context.env['project'],
+                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/f5-5616-pmteam-beta',
                                           '/global/images/',
                                           context.properties['imageName'],
                                          ])
