@@ -12,17 +12,17 @@ resources:
    ### Google Region to deploy BIG-IP, for example us-west1
    availabilityZone1: us-east1-b
    ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
-   mgmtNetwork: <Managment Network>
-   ### Specify network to use for managment traffic
-   network1: <Public or External subnet>
+   mgmtNetwork: dewpt
+   ### Specify network to use for management traffic
+   network1: dewpt2
    ### Specify Network name to for BIG-IP external application traffic
-   mgmtSubnet: <subnet of mgmtNetwork>
-   subnet1: <subnet of network1>
+   mgmtSubnet: subnet1
+   subnet1: subnet2
    ### Subnet of network1
-   licenseKey1: <lic key>
+   licenseKey1: MGQJZ-RRDHF-IMKTA-DJVKX-DTXYWXA
    ### BIG-IP license key
-   imageName: <specify image>
-   ### Image needs to be accessable by project launching deployment template
+   imageName: jpruitt-multinic
+   ### The image needs to be accessible by the project launching the deployment template
    ### BIG-IP image, valid (supported) choices include:
    ### f5-byol-bigip-13-0-0-2-3-1671-good
    ### f5-byol-bigip-13-0-0-2-3-1671-better
