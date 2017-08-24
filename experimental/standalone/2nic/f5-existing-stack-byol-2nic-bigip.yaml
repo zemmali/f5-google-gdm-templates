@@ -10,18 +10,18 @@ resources:
   properties:
    region: us-east1
    ### Google Region to deploy BIG-IP, for example us-west1
-   availabilityZone1: <region>
+   availabilityZone1: us-east1-b
    ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
-   mgmtNetwork: <mgmt_network>
+   mgmtNetwork: dewpt
    ### Specify network to use for management traffic
-   network1: <external_network>
+   network1: dewpt2
    ### Specify Network name to for BIG-IP external application traffic
-   mgmtSubnet: <mgmt_subnet>
-   subnet1: <external_subnet>
+   mgmtSubnet: subnet1
+   subnet1: subnet2
    ### Subnet of network1
-   mask1: '<external_subnet_mask>'
+   mask1: '24'
    ### Mask used for specified subnet using prefix notation. ie '24'
-   licenseKey1: <lic_key>
+   licenseKey1: RHJKF-LBFAI-RTBJI-ZTVKV-FWLJCEZ
    ### BIG-IP license key
    imageName: f5-byol-bigip-13-1-0-0-0-1696-best
    ### The image needs to be accessible by the project launching the deployment template
