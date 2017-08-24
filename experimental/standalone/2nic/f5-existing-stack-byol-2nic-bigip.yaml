@@ -19,6 +19,8 @@ resources:
    mgmtSubnet: <mgmt_subnet>
    subnet1: <external_subnet>
    ### Subnet of network1
+   mask1: '<external_subnet_mask>'
+   ### Mask used for specified subnet using prefix notation. ie '24'
    licenseKey1: <lic_key>
    ### BIG-IP license key
    imageName: f5-byol-bigip-13-1-0-0-0-1696-best
