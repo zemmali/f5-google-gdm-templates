@@ -61,10 +61,6 @@ def GenerateConfig(context):
                                   context.env['project'], '/regions/',
                                   context.properties['region'], '/subnetworks/',
                                   context.properties['subnet2']]),
-              'accessConfigs': [{
-                  'name': 'External NAT',
-                  'type': 'ONE_TO_ONE_NAT'
-              }],
             },
           ],
           'metadata': {
