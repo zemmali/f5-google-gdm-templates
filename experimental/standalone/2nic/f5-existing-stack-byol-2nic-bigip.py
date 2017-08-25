@@ -197,7 +197,7 @@ def GenerateConfig(context):
                                     'tmsh+=(\n',
                                     '\"tmsh create net vlan external interfaces add { 1.1 }\"\n',
                                     '\"tmsh create net self ${INT1ADDRESS}/32 vlan external\"\n',
-                                    '\"tmsh create net route ext_gw_int network ${GATEWAY}.1/32 interface external\"\n',
+                                    '\"tmsh create net route ext_gw_int network ${GATEWAY}/32 interface external\"\n',
                                     '\"tmsh create net route ext_rt network ${network}/',
                                     context.properties['mask1'],
                                     ' gw ${GATEWAY}.1\"\n',
