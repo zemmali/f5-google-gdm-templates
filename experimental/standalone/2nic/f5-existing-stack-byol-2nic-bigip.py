@@ -200,7 +200,7 @@ def GenerateConfig(context):
                                     '\"tmsh create net route ext_gw_int network ${GATEWAY}/32 interface external\"\n',
                                     '\"tmsh create net route ext_rt network ${network}/',
                                     context.properties['mask1'],
-                                    ' gw ${GATEWAY}.1\"\n',
+                                    ' gw ${GATEWAY}\"\n',
                                     '\"tmsh save /sys config\")\n',
                                     'for CMD in \"${tmsh[@]}\"\n',
                                     'do\n',
