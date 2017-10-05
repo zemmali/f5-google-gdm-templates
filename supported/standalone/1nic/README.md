@@ -65,11 +65,15 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 | Parameter | Description |
 | --- | --- |
+| region | The Google region in which you want to deploy BIG-IP, for example **us-west1** |
 | availabilityZone1 | The availability zone where you want to deploy the BIG-IP VE instance, such as **us-west1-a** |
+| network | Network name in which you want to deploy BIG-IP  |
 | licenseKey1 | Your F5 BIG-IP BYOL license key |
+| imageName | BIG-IP image you want to deploy |
 | instanceType | The BIG-IP instance type you want to use, such as **n1-standard-2** |
+| manGuiPort | BIG-IP management port.  The default is **8443** |
 | subnet1 | The name of your subnet |
-| bigipDns | The IP address of the DNS Server, example 4.4.4.4, currently required; subnet DHCP assigned DNS also added. |
+| allowUsageAnalytics | No | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent. |
 
 Example of the YAML file:
 
