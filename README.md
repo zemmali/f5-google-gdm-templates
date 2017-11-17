@@ -1,5 +1,22 @@
 # F5 Google Deployment Manager Templates 
 [![Slack Status](https://f5cloudsolutions.herokuapp.com/badge.svg)](https://f5cloudsolutions.herokuapp.com)
+[![Releases](https://img.shields.io/github/release/f5networks/f5-google-gdm-templates.svg)](https://github.com/f5networks/f5-google-gdm-templates/releases)
+[![Issues](https://img.shields.io/github/issues/f5networks/f5-google-gdm-templates.svg)](https://github.com/f5networks/f5-google-gdm-templates/issues)
+
+<table>
+ <tr>
+  <td align=center>:warning: <strong>CRITICAL<strong> :warning:  </td>
+ </tr>
+ <tr>
+  <td>BIG-IP virtual servers configured with a Client SSL profile may be vulnerable to an Adaptive Chosen Ciphertext attack (AKA Bleichenbacher attack). For complete information on this vulnerability, see https://support.f5.com/csp/article/K21905460. <br>F5 has released hotfixes for all vulnerable releases. <br>  
+   <ul>
+    <li><em>If you have an existing BIG-IP VE deployment in Google Cloud</em>  <br>See the <a href="https://support.f5.com/csp/article/K21905460">Security Advisory</a>, which contains information about upgrading your BIG-IP VE to a non-vulnerable version.</li>
+    <li><em>For <strong>new</strong> BIG-IP VE deployments in Google Cloud</em><br> F5 has uploaded new, non-vulnerable BIG-IP versions into Google and they are available for immediate use. </li>
+    
+   </ul></td>
+ </tr>
+ </table>
+
 
 ## Introduction
  
@@ -19,8 +36,12 @@ Descriptions for each template, including how the templates are generated and as
 The following is a list of the current *supported* F5 GDM templates. Click the link to view the README file which includes information on how to deploy the template in Google Cloud.
 <br>
   - [**Standalone BIG-IP VE - Single NIC**](https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/1nic)
+<<<<<<< HEAD
   
 <br> 
+=======
+
+>>>>>>> v-1-2-0
 
 ---
 
